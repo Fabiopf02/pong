@@ -1,0 +1,63 @@
+html, body {
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;padding: 0;
+    width: 100%;height: 100%;
+    overflow: hidden;
+}
+.f {
+    width: 100%;height: 100%;
+    background-color: #000;
+    position: absolute;display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+.title {
+    color: #fff;
+    font-size: 3rem;
+    border-bottom: 4px solid #fff;
+}
+.btn {
+    outline: none;
+    width: 90%;height: 90%;
+    max-width: 300px;max-height: 150px;
+    background: seagreen;color: #ccc;
+    transition: background 1s;font-weight: bold;
+    border-radius: 5px;font-size: 2rem;
+    cursor: pointer;
+    box-shadow: 5px 5px 30px 0px #222;
+}
+.btn:hover {
+    background: #999;
+    color: #333;
+}
+.hidden {
+    display: none;
+}
+.screen {
+    /* background-color: #000; */
+    position: absolute;
+    left: 0;right: 0;top: 0;bottom: 0;margin: auto;
+}
+.row {
+    display: flex;
+    flex-direction: row;
+    width: 80%;max-width: 300px;
+    justify-content: space-between;
+    height: 30px;
+    margin-bottom: 1rem;
+}
+.row input {width: 45%;}
+input {
+    width: 80%;max-width: 200px;height: 100%;max-height: 40px;
+    border-radius: 4px;
+    outline: none;text-align: center;
+    background: #ccc;
+}
+
+::selection {
+    background: #eee;
+}
+input:focus {border: 2px solid aqua;}
+
+span {position: absolute;opacity: 0;}

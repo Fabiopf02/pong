@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Pong</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="screen" class="hidden"></canvas>
+    <div id="backg" class="f">
+        <h1 class="title">PONG</h1>
+        <div class="row">
+            <input type="text" placeholder="Jogador 1" id="p1" maxlength="10" required>
+            <input type="text" placeholder="Jogador 2" id="p2" maxlength="10" required>
+        </div>
+        <input type="number" id="maxPoints" placeholder="Pontuação Máxima..." required>
+        <hr>
+        <button class="btn" onclick="validate()">Jogar</button>
+        <div id="time" class="title"></div>
+    </div>
+    <script src="./form.js"></script>
+    <script src="./script.js"></script>
+</body>
+</html>
