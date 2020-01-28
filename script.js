@@ -2,8 +2,10 @@ var click = 0;
 function game(p1, p2, points) {
 
     click++;
+
     var t = 3, _KEYS = [], _SPIN = 0, tm, grd, maxPoints = points, _P = true, _W = null, 
-    DisplayWinner = false, alpha = 0.0, tgame = null, s = 0, m = 0, h = 0, i = 0;
+    DisplayWinner = false, alpha = 0.0, s = 0, m = 0, h = 0, i = 0, _touches = [];
+    
     const canvas = document.querySelector('#screen');
     const ctx = canvas.getContext("2d");
     const backg = document.querySelector('div#backg');
@@ -107,16 +109,70 @@ function game(p1, p2, points) {
         }
     };
 
-    //move
+    //listening to the keys
     document.addEventListener('keydown', (e) => {
         let key = e.keyCode;
         _KEYS[key] = true;
-    })
+    });
     document.addEventListener('keyup', (e) => {
         let key = e.keyCode;
         delete _KEYS[key];
+    });
+
+    //touchs
+    document.addEventListener('touchstart', (e) => {
+        let touch = e.changedTouches;
+        let {clientX, clientY} = touch[0];
+        addTouche(clientX, clientY, touch[0].identifier);
+    });
+    document.addEventListener('touchend', (e) => {
+        let touch = e.changedTouches;
+        let remove = removeTouche[_touches[touch[0].identifier]];
+        if(remove) remove(touch[0].identifier);
     })
 
+    function addTouche(clX, clY, identifier) {
+        //for player1
+        if(clX <= resizeScreen().w/2) {
+            if(clY <= resizeScreen().h/2) {
+                _KEYS[87] = true;
+                _touches[identifier] = 'p1up';
+            } else {
+                _KEYS[83] = true;
+                _touches[identifier] = 'p1down';
+            }
+        //for player2
+        } else {
+            if(clY <= resizeScreen().h/2) {
+                _KEYS[38] = true;
+                _touches[identifier] = 'p2up';
+            } else {
+                _KEYS[40] = true;
+                _touches[identifier] = 'p2down';
+            }
+        }
+    }
+
+    const removeTouche = {
+        p1up: function(identifier) {
+            delete _touches[identifier];
+            delete _KEYS[87];
+        },
+        p1down: function(identifier) {
+            delete _touches[identifier];
+            delete _KEYS[83];
+        },
+        p2up: function(identifier) {
+            delete _touches[identifier];
+            delete _KEYS[38];
+        },
+        p2down: function(identifier) {
+            delete _touches[identifier];
+            delete _KEYS[40];
+        }
+    }
+
+    //checks if the key pressed is valid and moves the player
     function movePlayers() {
         if(87 in _KEYS) {
             if(player1.y > 0) player1.y -= player1.speed;
@@ -131,6 +187,8 @@ function game(p1, p2, points) {
             if(player2.y + player2.h <= resizeScreen().h) player2.y += player2.speed;
         }
     }
+
+    //move the ball;change your speed
     function moveBall() {
         if(ball.y - ball.r <= 0) {
             ball.dy = 1;
@@ -173,6 +231,7 @@ function game(p1, p2, points) {
         ball.y += ball.speed * ball.dy;
     }
 
+    //updates player scores
     function updatePoints(player) {
         if(player === "player1") {
             player1.points++;
@@ -194,6 +253,7 @@ function game(p1, p2, points) {
         }
     }
 
+    //check players score
     function checkPoints(mpoints) {
         let winner = null;
         let _PLAYING = true;
@@ -211,6 +271,7 @@ function game(p1, p2, points) {
         }
     }
 
+    //get the screen size
     function resizeScreen() {
         let width = window.innerWidth;
         let height = window.innerHeight;
@@ -218,9 +279,10 @@ function game(p1, p2, points) {
         return {
             w: width,
             h: height
-        }
+        };
     }
 
+    //playing time
     function timeGame() {
         if(_P) i++;
         s = Math.floor(i/80);
@@ -276,8 +338,8 @@ function game(p1, p2, points) {
         ctx.fillRect(0, 0, resizeScreen().w, resizeScreen().h);
         ctx.fill();
 
+
         if(_P) {
-            s++;
             //move
             movePlayers();
             moveBall();
@@ -286,6 +348,12 @@ function game(p1, p2, points) {
             ctx.fillStyle = "#fff";
             ctx.fillText(timeGame(), 30, 15);
         }
+        if(!_P) {
+            if(!DisplayWinner) {
+                setTimeout(() => {DisplayWinner = true}, 1000);
+            }
+        }
+
 
         //draw objects
         player1.drawPlayer();
@@ -295,12 +363,6 @@ function game(p1, p2, points) {
         //draw points
         player1.drawPoints();
         player2.drawPoints();
-
-        if(!_P) {
-            if(!DisplayWinner) {
-                setTimeout(() => {DisplayWinner = true}, 1000);
-            }
-        }
 
         //line center
         ctx.beginPath();
